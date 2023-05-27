@@ -105,7 +105,7 @@ const Login = () => {
                     {!ctx.login && <div className="control">
                         <input
                             type='password'
-                            id='password'
+                            id='Password'
                             required
                             placeholder='Confirm Password'
                             ref={enteredConfirmPass}
