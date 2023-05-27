@@ -109,7 +109,7 @@ const Login = () => {
                         />
                     </div>}
                     <div >
-                        <button className="btn btn-primary border w-100" onClick={submitHandler}>{!login ? "Sign Up" : "Login"}</button>
+                        <button  className="btn btn-primary border w-100" onClick={submitHandler}>{!login ? "Sign Up" : "Login"}</button>
                     </div>
                 </form>
                 <div>
