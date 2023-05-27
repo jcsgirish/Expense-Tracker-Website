@@ -1,11 +1,12 @@
-import React, { useRef } from 'react'
+import React, { useContext, useRef } from 'react'
 import { Link } from 'react-router-dom'
+import { expContext } from '../../Store/ExpenseContext';
 
 const ProfileDetails = (props) => {
     let userName = useRef();
     let profileUrl = useRef();
-
-    const handleUpdate = async (e,token) => {
+    const ctx=useContext(expContext);
+    const handleUpdate = async (e) => {
         e.preventDefault();
         console.log(userName.current.value, profileUrl.current.value);
         let responce = await fetch(
@@ -13,7 +14,7 @@ const ProfileDetails = (props) => {
             {
                 method: 'POST',
                 body: JSON.stringify({
-                    idToken:token,
+                    idToken:ctx.token,
                     displayName: userName.current.value,
                     photoUrl: profileUrl.current.value,
                     deleteAttribute: "DISPLAY_NAME",
@@ -27,7 +28,32 @@ const ProfileDetails = (props) => {
 
         if (responce.ok) {
             let data = await responce.json();
-            console.log("Token:", data.idToken);
+            console.log("Token:", data.providerUserInfo);
+            try {
+                let responce = await fetch(
+                    'https://identitytoolkit.googleapis.com/v1/accounts:lookup?key=AIzaSyAdYQmjZzT53zR_JV-z1O_To2WZobWiLs0',
+                    {
+                        method: 'POST',
+                        body: JSON.stringify({
+                            idToken:ctx.token,
+                        }),
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                    }
+                )
+                if (responce.ok) {
+                    let data=await responce.json();
+                    ctx.setProfileInfo({Name:"Girish",ProfileUrl:data.users[0].photoUrl})
+                    alert("request successfull")
+                    console.log("UserData",data.users[0].photoUrl);
+                } else {
+                    throw new Error("Failed")
+                }
+            } catch (error) {
+                console.log(error)
+            }
+
         } else {
             let errorMessage = 'failed!';
             alert(errorMessage);
@@ -36,7 +62,8 @@ const ProfileDetails = (props) => {
     return (
         <div className='my-2  mx-2'>
             <h1 className="fst-italic" >
-                Welcome to expense tracker!!!
+                Welcome to expanse tracker!!!
+                {console.log(ctx.profileInfo)}
             </h1>
             <span className='fst-italic bg-warning'>Your profile is 64% complete.A complete profile has higher chances of landing a job.<Link className='text-primary' to="/details">Complete now</Link></span>
             <hr />
@@ -52,7 +79,7 @@ const ProfileDetails = (props) => {
                         </svg>
                         Full Name:
                     </label>
-                    <input type="text" className="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" ref={userName} />
+                    <input type="text" className="form-control"  id="exampleInputEmail1" aria-describedby="emailHelp" ref={userName}   />
                 </div>
                 <div className="mb-3">
                     <label htmlFor="exampleInputPassword1" className="form-label">
@@ -61,7 +88,7 @@ const ProfileDetails = (props) => {
                         </svg>
                         Profile photo URL:
                     </label>
-                    <input type="url" className="form-control" id="exampleInputPassword1" ref={profileUrl} />
+                    <input type="url" className="form-control" id="exampleInputPassword1" ref={profileUrl}/>
                 </div>
                 <button type="submit" className="btn btn-primary" onClick={handleUpdate}>Update</button>
                 <hr />
@@ -70,4 +97,4 @@ const ProfileDetails = (props) => {
     )
 }
 
-export default ProfileDetails  
+export default ProfileDetails

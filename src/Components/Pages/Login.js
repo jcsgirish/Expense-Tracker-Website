@@ -1,17 +1,18 @@
-import React, { useRef, useState } from 'react'
-import DummyScreen from '../Layout/DummyPage';
+import React, { useContext, useRef } from 'react'
+import { useHistory } from 'react-router-dom';
+import { expContext } from '../../Store/ExpenseContext';
 import './Login.css'
 
 const Login = () => {
     let enteredpass = useRef();
     let enteredEmail = useRef();
     let enteredConfirmPass = useRef();
-    const [login, setLogin] = useState(false);
-    const [token, setToken] = useState(null);
 
+    let ctx=useContext(expContext);
+    const history=useHistory();
     const submitHandler = async (e) => {
         e.preventDefault();
-        if (!login) {
+        if (!ctx.login) {
             if (enteredEmail.current.value.length > 0 && enteredpass.current.value.length > 0 && enteredConfirmPass.current.value.length > 0) {
                 if (enteredpass.current.value === enteredConfirmPass.current.value) {
                     let responce = await fetch(
@@ -31,10 +32,10 @@ const Login = () => {
 
                     if (responce.ok) {
                         let data = await responce.json();
-                        console.log("Authantication Token:", data.idToken);
+                        console.log("Authantication Token:",ctx.token);
+                        ctx.setToken(data.idToken);
                         alert("User has signed Up")
                         console.log("User has signed Up");
-                        setToken(data.idToken);
                     } else {
                         let errorMessage = 'Authentication failed!';
                         alert(errorMessage);
@@ -65,10 +66,12 @@ const Login = () => {
 
                 if (responce.ok) {
                     let data = await responce.json();
-                    setToken(data.idToken);
-                    console.log("Authantication Token:", token);
+                    console.log("Authantication Token:", data.idToken);
+                    ctx.setToken(data.idToken);
+                    console.log(ctx)
                     alert("Logged In Successfully")
                     console.log("Logged In Successfully");
+                    history.push('/profile')
                 } else {
                     let errorMessage = 'Authentication failed!';
                     alert(errorMessage);
@@ -84,8 +87,8 @@ const Login = () => {
 
     return (
         <div>
-            {!token && <section className="auth">
-                <h2 className='my-3'>{!login ? "Sign Up" : "Log In"}</h2>
+            {!ctx.token && <section className="auth">
+                <h2 className='my-3'>{!ctx.login ? "Sign Up" : "Log In"}</h2>
                 <form >
                     <div className="control">
                         <input type='email' id='email' placeholder='Email' ref={enteredEmail} />
@@ -99,29 +102,28 @@ const Login = () => {
                             ref={enteredpass}
                         />
                     </div>
-                    {!login && <div className="control">
+                    {!ctx.login && <div className="control">
                         <input
                             type='password'
-                            id='Password'
+                            id='password'
                             required
                             placeholder='Confirm Password'
                             ref={enteredConfirmPass}
                         />
                     </div>}
                     <div >
-                        <button  className="btn btn-primary border w-100" onClick={submitHandler}>{!login ? "Sign Up" : "Login"}</button>
+                        <button className="btn btn-primary border w-100" onClick={submitHandler}>{!ctx.login ? "Sign Up" : "Login"}</button>
                     </div>
                 </form>
                 <div>
                     <button
-                        onClick={() => { setLogin(!login) }}
+                        onClick={() => { ctx.setLogin(!ctx.login) }}
                         type="button"
                         className="btn btn-outline-success my-3 w-100">
-                        {!login ? "Have an account?Login" : "Don't have an account?Sign up"}
+                        {!ctx.login ? "Have an account?Login" : "Don't have an account?Sign up"}
                     </button>
                 </div>
             </section> }
-            {token && <DummyScreen/>}
         </div>
     )
 }

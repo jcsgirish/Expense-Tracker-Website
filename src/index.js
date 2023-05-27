@@ -5,15 +5,16 @@ import React from 'react';
 import './index.css';
 import reportWebVitals from './reportWebVitals';
 import {BrowserRouter} from 'react-router-dom'
-
+import ExpenseContext from './Store/ExpenseContext';
 
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-  
+  <ExpenseContext>
   <BrowserRouter>
     <App />
   </BrowserRouter>
+  </ExpenseContext>
   
 );
 
