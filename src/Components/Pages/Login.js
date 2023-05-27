@@ -2,6 +2,8 @@ import React, { useContext, useRef } from 'react'
 import { useHistory } from 'react-router-dom';
 import { expContext } from '../../Store/ExpenseContext';
 import './Login.css'
+import {Link } from 'react-router-dom'
+ 
 
 const Login = () => {
     let enteredpass = useRef();
@@ -66,11 +68,38 @@ const Login = () => {
 
                 if (responce.ok) {
                     let data = await responce.json();
-                    
+                    console.log("Authantication Token:", data.idToken);
                     ctx.setToken(data.idToken);
                     console.log(ctx)
                     alert("Logged In Successfully")
                     console.log("Logged In Successfully");
+                    try {
+                        let responce = await fetch(
+                            'https://identitytoolkit.googleapis.com/v1/accounts:lookup?key=AIzaSyAdYQmjZzT53zR_JV-z1O_To2WZobWiLs0',
+                            {
+                                method: 'POST',
+                                body: JSON.stringify({
+                                    idToken:data.idToken,
+                                }),
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                },
+                            }
+                        )
+                        if (responce.ok) {
+                            let data=await responce.json();
+                            console.log(data.users[0])
+                            // data=JSON.parse( data.users[0].photoUrl)
+                            // ctx.setProfileInfo(data);
+                            // let newdata=JSON.parse(data.users[0].photoUrl)
+                            ctx.setProfileInfo({myName:data.users[0].displayName,myUrl:data.users[0].photoUrl});
+                            alert("request successfull")
+                        } else {
+                            throw new Error("Failed")
+                        }
+                    } catch (error) {
+                        console.log(error)
+                    }
                     history.push('/profile')
                 } else {
                     let errorMessage = 'Authentication failed!';
@@ -113,6 +142,7 @@ const Login = () => {
                     </div>}
                     <div >
                         <button className="btn btn-primary border w-100" onClick={submitHandler}>{!ctx.login ? "Sign Up" : "Login"}</button>
+                       {!ctx.login && <Link  type='button' className="nav-link active border border-primary rounded p-1 mt-2" to="/forget">Forget Password?</Link>}
                     </div>
                 </form>
                 <div>

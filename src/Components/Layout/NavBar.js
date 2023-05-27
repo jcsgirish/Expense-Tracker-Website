@@ -30,13 +30,13 @@ const Navbar = () => {
                                     </a>
                             </li>
                             <li className="nav-item">
-                                <a className="nav-link active" aria-current="page" href="/profile">Home</a>
+                                <a className="nav-link active" aria-current="page" href="/">Home</a>
                             </li>
                             <li className="nav-item">
                                 <a className="nav-link active" aria-current="page" href="/">Products</a>
                             </li>
                             <li className="nav-item">
-                                <a className="nav-link active" aria-current="page" href="/details">About Us</a>
+                                <a className="nav-link active" aria-current="page" href="/">About Us</a>
                             </li>
                         </ul>
                         {ctx.token && <form className="form-inline my-2 my-lg-0">
