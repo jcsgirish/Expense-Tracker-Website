@@ -66,7 +66,7 @@ const Login = () => {
 
                 if (responce.ok) {
                     let data = await responce.json();
-                    console.log("Authantication Token:", data.idToken);
+                    
                     ctx.setToken(data.idToken);
                     console.log(ctx)
                     alert("Logged In Successfully")

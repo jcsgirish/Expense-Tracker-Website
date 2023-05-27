@@ -10,9 +10,10 @@ const Navbar = () => {
         history.push('/')
         ctx.setLogin(false);
         ctx.setToken(null);
+        console.log('LoggedOut');
     
     
-        console.log(ctx);
+        
     }
     return (
         <div>
