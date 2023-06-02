@@ -9,32 +9,30 @@ import Expenses from './Components/Pages/Expenses';
 import { expContext } from './Store/ExpenseContext';
 
 function App() {
-  const ctx = useContext(expContext);
-  const isLoggedIn = ctx.userLoggedIn;
-
+  let ctx = useContext(expContext);
   return (
     <Fragment>
       <Navbar />
       <Switch>
         <Route exact path='/'>
-          {isLoggedIn ? <Redirect to="/exps" /> : <Login />}
+          <Login />
         </Route>
         <Route exact path='/forget'>
           <ForgetPasswordPage />
         </Route>
         <Route exact path='/profile'>
-          <DummyScreen />
+          {ctx.token && <DummyScreen />}
+          {!ctx.token && <Redirect to='/' />}
         </Route>
         <Route exact path='/details'>
           <ProfileDetails />
         </Route>
-        <Route exact path='/exps'>
-         <Expenses /> 
-          
+        <Route exact path='/Expensess'>
+        <Expenses/>
         </Route>
       </Switch>
     </Fragment>
   );
 }
 
-export default App;
+export default App
