@@ -1,37 +1,37 @@
-import React, { useContext, useRef, useEffect } from 'react';
-import { expContext } from '../../Store/ExpenseContext';
+import React, { useEffect, useRef } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { expenseActions } from '../../Store';
 
 const Expenses = () => {
+  const dispatch = useDispatch();
+  const expenses = useSelector(state => state.expense.expenses);
 
-  const ctx = useContext(expContext);
-
-  useEffect(() => {
-    const fetchExpenses = async () => {
-      try {
-        const response = await fetch(
-          'https://expense-8a8d1-default-rtdb.firebaseio.com/expense.json'
-        );
-
-        if (response.ok) {
-          const data = await response.json();
+  const fetchExpenses = async () => {
+    try {
+      const response = await fetch(
+        'https://expense-8a8d1-default-rtdb.firebaseio.com/expense.json'
+      );
+  
+      if (response.ok) {
+        const data = await response.json();
+        if (data) {
           const expenses = Object.keys(data).map((key) => ({
             key: key,
             ...data[key],
           }));
-          ctx.setExpenses(expenses);
+          dispatch(expenseActions.setExpenses(expenses));
         } else {
-          throw new Error('Failed to fetch expenses');
+          // Handle the case when data is empty or null
+          console.log('No expenses found.');
         }
-      } catch (error) {
-        console.log(error);
+      } else {
+        throw new Error('Failed to fetch expenses');
       }
-    };
-
-    fetchExpenses();
-  }, []);
-
-
-
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  
   const deleteHandler = async (item) => {
     try {
       console.log('Deleting item:', item);
@@ -51,9 +51,9 @@ const Expenses = () => {
       if (res.ok) {
         alert('Expense Deleted Successfully');
 
-        const filteredExpenses = ctx.expenses.filter((expense) => expense.key !== item.key);
-ctx.setExpenses(filteredExpenses);
-        
+        const filteredExpenses = expenses.filter((expense) => expense.key !== item.key);
+        // Set filtered expenses in the Redux store using dispatch
+        dispatch(expenseActions.setExpenses(filteredExpenses));
       } else {
         throw new Error('Failed to delete expense');
       }
@@ -90,11 +90,11 @@ ctx.setExpenses(filteredExpenses);
         if (res.ok) {
           alert('Expense updated successfully');
 
-          const updatedExpenses = ctx.expenses.map((expense) =>
-          expense.key === item.key ? updatedItem : expense
-        );
-        ctx.setExpenses(updatedExpenses);
-          
+          const updatedExpenses = expenses.map((expense) =>
+            expense.key === item.key ? updatedItem : expense
+          );
+          // Set updated expenses in the Redux store using dispatch
+          dispatch(expenseActions.setExpenses(updatedExpenses));
         } else {
           throw new Error('Failed to update expense');
         }
@@ -143,7 +143,8 @@ ctx.setExpenses(filteredExpenses);
             key: data.name,
           };
           alert('Expense added successfully');
-          ctx.setExpenses([...ctx.expenses, newExpenseWithKey]);
+          // Update expenses in the Redux store using dispatch
+          dispatch(expenseActions.setExpenses([...expenses, newExpenseWithKey]));
         } else {
           throw new Error('Failed to add expense');
         }
@@ -155,101 +156,105 @@ ctx.setExpenses(filteredExpenses);
     }
   };
 
- 
-
   return (
     <div className="container">
       <div className="row gx-3 gy-2 align-items-center mx-5 my-5">
         <h1>Enter your expense</h1>
         <form className="row gy-2 gx-3 align-items-center">
-        <div className="col-auto">
-          <label className="visually-hidden" htmlFor="expenseamount">
-            Expense amount:
-          </label>
-          <div className="input-group">
-            <div className="input-group-text"> Expense amount:</div>
-            <input
-              type="text"
-              className="form-control"
-              ref={enteredAmount}
-              id="expenseamount"
-            />
+          <div className="col-auto">
+            <label className="visually-hidden" htmlFor="expenseamount">
+              Expense amount:
+            </label>
+            <div className="input-group">
+              <div className="input-group-text">Expense amount:</div>
+              <input
+                type="text"
+                className="form-control"
+                ref={enteredAmount}
+                id="expenseamount"
+              />
+            </div>
           </div>
-        </div>
-        <div className="col-auto">
-          <label className="visually-hidden" htmlFor="description">
-            Description:
-          </label>
-          <div className="input-group">
-            <div className="input-group-text">Description:</div>
-            <input
-              type="text"
-              className="form-control"
-              ref={enteredDesc}
-              id="description"
-            />
+          <div className="col-auto">
+            <label className="visually-hidden" htmlFor="description">
+              Description:
+            </label>
+            <div className="input-group">
+              <div className="input-group-text">Description:</div>
+              <input
+                type="text"
+                className="form-control"
+                ref={enteredDesc}
+                id="description"
+              />
+            </div>
           </div>
-        </div>
-        <div className="col-auto">
-          <label className="visually-hidden" htmlFor="category">
-            Category:
-          </label>
-          <div className="input-group">
-            <select
-              className="form-select"
-              defaultValue="choose a category"
-              ref={enteredCategory}
-              id="category"
+          <div className="col-auto">
+            <label className="visually-hidden" htmlFor="category">
+              Category:
+            </label>
+            <div className="input-group">
+              <select
+                className="form-select"
+                defaultValue="choose a category"
+                ref={enteredCategory}
+                id="category"
+              >
+                <option value="choose a category" disabled>
+                  Category
+                </option>
+                <option value="movie">Movie</option>
+                <option value="food">Food</option>
+                <option value="electricity">Electricity</option>
+                <option value="fuel">Fuel</option>
+              </select>
+            </div>
+          </div>
+          <div className="col-auto"></div>
+          <div className="col-auto">
+            <button
+              type="submit"
+              className="btn btn-primary"
+              id="onSubmit"
+              onClick={handleSubmitExpense}
             >
-              <option value="choose a category" disabled>
-                Category
-              </option>
-              <option value="movie">Movie</option>
-              <option value="food">Food</option>
-              <option value="electricity">Electricity</option>
-              <option value="fuel">Fuel</option>
-            </select>
+              Submit
+            </button>
           </div>
-        </div>
-        <div className="col-auto"></div>
-        <div className="col-auto">
-          <button
-            type="submit"
-            className="btn btn-primary"
-            id="onSubmit"
-            onClick={handleSubmitExpense}
-          >
-            Submit
-          </button>
-        </div>
         </form>
       </div>
-      {ctx.expenses.length > 0 && <h1 className="text-center">Expenses</h1>}
-      <div className="row text-center ">
-        {ctx.expenses.map((item) => {
+      {expenses.length > 0 && <h1 className="text-center">Expenses</h1>}
+      <div className="row text-center">
+        {expenses.map((item) => {
           return (
             <div key={item.key} className="card w-25 col-4 mx-3 my-3">
               <div className="card-body">
-              <h5 className="card-title">
-                Amount:
-                <span className="text-primary">{item.expenseAmount}</span>
-              </h5>
-              <h5 className="card-title">
-                Description:
-                <span className="text-primary">{item.expenseDesc}</span>
-              </h5>
-              <h5 className="card-title">
-                Category:
-                <span className="text-primary"> {item.expenseCategory}</span>
-              </h5>
-              <span>
-                <button className="btn btn-danger mx-1 my-1" onClick={() => deleteHandler(item)}>
-                  DELETE
-                </button>
-                <button className="btn btn-secondary mx-1 my-1" onClick={() => editHandler(item)}>
-                  EDIT
-                </button>
-              </span>
+                <h5 className="card-title">
+                  Amount:
+                  <span className="text-primary">{item.expenseAmount}</span>
+                </h5>
+                <h5 className="card-title">
+                  Description:
+                  <span className="text-primary">{item.expenseDesc}</span>
+                </h5>
+                <h5 className="card-title">
+                  Category:
+                  <span className="text-primary"> {item.expenseCategory}</span>
+                </h5>
+                <span>
+                  <button
+                    className="btn btn-danger mx-1 my-1"
+                    onClick={() => deleteHandler(item)}
+                  >
+                    DELETE
+                  </button>
+                  <button
+                    className="btn btn-secondary mx-1 my-1"
+                    onClick={() => editHandler(item)}
+                  >
+                    EDIT
+                  </button>
+                </span>
               </div>
             </div>
           );

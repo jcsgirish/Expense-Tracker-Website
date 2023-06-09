@@ -1,8 +1,9 @@
-import React, { useContext } from 'react'
+
+import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom'
-import { expContext } from '../../Store/ExpenseContext';
+//import { expContext } from '../../Store/ExpenseContext';
 const DummyScreen = () => {
-  const ctx = useContext(expContext);
+  const token = useSelector(state => state.authentication.token);
   
   const handleVerify = async (e) => {
     e.preventDefault();
@@ -13,7 +14,7 @@ const DummyScreen = () => {
           method: 'POST',
           body: JSON.stringify({
             "requestType": "VERIFY_EMAIL",
-            "idToken": ctx.token
+            "idToken": token
           }),
           headers: {
             'Content-Type': 'application/json',

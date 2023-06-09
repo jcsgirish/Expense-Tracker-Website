@@ -1,12 +1,17 @@
-import React, { useContext, useRef } from 'react'
-
-import { expContext } from '../../Store/ExpenseContext';
+import React, {  useRef } from 'react'
+import { useDispatch, useSelector } from 'react-redux';
+//import { expContext } from '../../Store/ExpenseContext';
 import { Link } from  'react-router-dom'
+import { authActions } from '../../Store';
 
-const ProfileDetails = (props) => {
+const ProfileDetails = () => {
+    const token = useSelector(state => state.authentication.token);
+    const profileInfo = useSelector(state => state.authentication.profileInfo);
+    const dispatch=useDispatch();
+
     let userName = useRef();
     let profileUrl = useRef();
-    const ctx=useContext(expContext);
+   // const ctx=useContext(expContext);
     const handleUpdate = async (e) => {
         e.preventDefault();
         console.log(userName.current.value, profileUrl.current.value);
@@ -15,7 +20,7 @@ const ProfileDetails = (props) => {
             {
                 method: 'POST',
                 body: JSON.stringify({
-                    idToken:ctx.token,
+                    idToken:token,
                     displayName: userName.current.value,
                     photoUrl: profileUrl.current.value,
                     deleteAttribute: "DISPLAY_NAME",
@@ -36,7 +41,7 @@ const ProfileDetails = (props) => {
                     {
                         method: 'POST',
                         body: JSON.stringify({
-                            idToken:ctx.token,
+                            idToken:token,
                         }),
                         headers: {
                             'Content-Type': 'application/json',
@@ -45,8 +50,9 @@ const ProfileDetails = (props) => {
                 )
                 if (responce.ok) {
                     let data=await responce.json();
-                    ctx.setProfileInfo({Name:"Girish",ProfileUrl:data.users[0].photoUrl})
+                    //ctx.setProfileInfo({Name:"Girish",ProfileUrl:data.users[0].photoUrl})
                     alert("request successfull")
+                    dispatch(authActions.setProfileInfo({myName:data.displayName,myUrl:data.photoUrl}))
                     console.log("UserData",data.users[0].photoUrl);
                 } else {
                     throw new Error("Failed")
@@ -64,7 +70,7 @@ const ProfileDetails = (props) => {
         <div className='my-2  mx-2'>
             <h1 className="fst-italic" >
                 Welcome to expanse tracker!!!
-                {console.log(ctx.profileInfo)}
+                {/*console.log(ctx.profileInfo)*/}
             </h1>
             <span className='fst-italic bg-warning'>Your profile is 64% complete.A complete profile has higher chances of landing a job.<Link className='text-primary' to="/details">Complete now</Link></span>
             <hr />
@@ -89,7 +95,7 @@ const ProfileDetails = (props) => {
                         </svg>
                         Profile photo URL:
                     </label>
-                    <input type="url" className="form-control" id="exampleInputPassword1" ref={profileUrl}/>
+                    <input type="url" className="form-control"  placeholder={profileInfo.myUrl} id="exampleInputPassword1" ref={profileUrl}/>
                 </div>
                 <button type="submit" className="btn btn-primary" onClick={handleUpdate}>Update</button>
                 <hr />
