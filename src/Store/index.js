@@ -1,7 +1,7 @@
 
 import { configureStore, createSlice } from '@reduxjs/toolkit';
 
-const inititalExpenseState = { expenses: [] }
+const inititalExpenseState = { expenses: [],totalExpense:0 }
 const expenseSlice = createSlice({
     name: "expense",
     initialState: inititalExpenseState,
@@ -11,6 +11,20 @@ const expenseSlice = createSlice({
         }
     }
 })
+
+const inititalThemeState = { mode:false }
+const themeSlice = createSlice({
+    name: "theme",
+    initialState: inititalThemeState,
+    reducers: {
+        setMode(state) {
+            state.mode=!state.mode;
+        }
+    }
+})
+
+
+
 
 const inititalAuthState = {
     login: false,
@@ -41,9 +55,10 @@ const authSlice = createSlice({
 })
 
 const store = configureStore({
-    reducer: { expense: expenseSlice.reducer, authentication: authSlice.reducer }
+    reducer: { expense: expenseSlice.reducer, authentication: authSlice.reducer , theme: themeSlice.reducer }
 });
 
 export default store;
 export const expenseActions = expenseSlice.actions;
 export const authActions = authSlice.actions;
+export const themeActions=themeSlice.actions;

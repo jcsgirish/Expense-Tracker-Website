@@ -1,10 +1,58 @@
 import React, { useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { expenseActions } from '../../Store';
+import { themeActions } from '../../Store';
+
+
+
+function CalculateTotalExpense(array) {
+  let sum = 0;
+  for (let i = 0; i < array.length; i++) {
+      sum = sum + parseInt(array[i].expenseAmount);
+  }
+  return sum;
+}
+
+
+
+
+
+
+
+
+
 
 const Expenses = () => {
   const dispatch = useDispatch();
   const expenses = useSelector(state => state.expense.expenses);
+  const totalExpense=useSelector(state=>state.expense.totalExpense)
+
+
+  const handleDownloadExpense = (item) => {
+    const expenseData = [
+      ['Amount', item.expenseAmount],
+      ['Description', item.expenseDesc],
+      ['Category', item.expenseCategory],
+    ];
+
+    const csvContent = 'data:text/csv;charset=utf-8,' + expenseData.map(row => row.join(',')).join('\n');
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement('a');
+    link.setAttribute('href', encodedUri);
+    link.setAttribute('download', `expense_${item.key}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
+  const handleActive = (e) => {
+    e.preventDefault();
+    if (CalculateTotalExpense(expenses) >= 10000) {
+      dispatch(themeActions.setMode());
+    } else {
+      alert('Total expense should be at least 10000 to activate premium');
+    }
+  };
 
   const fetchExpenses = async () => {
     try {
@@ -254,12 +302,27 @@ const Expenses = () => {
                   >
                     EDIT
                   </button>
+                  <button
+                  className="btn btn-primary mx-1 my-1"
+                  onClick={() => handleDownloadExpense(item)}>
+                  <i className="bi bi-download"></i>
+                </button>
                 </span>
               </div>
             </div>
           );
         })}
       </div>
+      {expenses.length > 0 && (
+        <h1 className="text-center">Total Expense Amount: ${CalculateTotalExpense(expenses)}</h1>
+      )}
+      {CalculateTotalExpense(expenses) >= 10000 && (
+        <div className="text-center">
+          <button className="btn btn-primary" onClick={handleActive}>
+            Active Premium
+          </button>
+        </div>
+      )}
     </div>
   );
 };
