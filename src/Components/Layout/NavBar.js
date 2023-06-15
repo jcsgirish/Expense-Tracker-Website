@@ -6,8 +6,8 @@ import { authActions } from '../../Store';
 
 const Navbar = () => {
   const history = useHistory();
-  const token = useSelector(state => state.authentication.token);
-  const IsLoggedIn = useSelector((state) => state.authentication.IsLoggedIn);
+  const token = useSelector((state) => state.authentication.token);
+  const isLoggedIn = useSelector((state) => state.authentication.isLoggedIn);
   const dispatch = useDispatch();
 
   const handleLogout = (e) => {
@@ -36,33 +36,28 @@ const Navbar = () => {
           </button>
           <div className="collapse navbar-collapse" id="navbarSupportedContent">
             <ul className="navbar-nav me-auto mb-2 mb-lg-0">
-              <li className="nav-item">
-                <NavLink className="nav-link active" aria-current="page" to="/">
-                  Home
-                </NavLink>
-              </li>
-              <li className="nav-item">
-                <NavLink className="nav-link active" aria-current="page" to="/Expenses">
-                  Expenses
-                </NavLink>
-              </li>
-              <li className="nav-item">
-                <NavLink className="nav-link active" aria-current="page" to="/">
-                  Products
-                </NavLink>
-              </li>
-              <li className="nav-item">
-                <NavLink className="nav-link active" aria-current="page" to="/">
-                  About Us
-                </NavLink>
-              </li>
+              <a style={{ fontSize: '5rem' }}>ExpenseTracker</a>
             </ul>
-            { token && ( // Only show the logout button if the user is logged in
-              <form className="form-inline my-2 my-lg-0">
-                <button className="btn btn-primary" onClick={handleLogout}>
-                  Logout
-                </button>
-              </form>
+            {token && ( // Only show the logout button and dashboard if the user is logged in
+              <>
+                <ul className="navbar-nav ms-auto me-0">
+                  <li className="nav-item" style={{ marginRight: '10px' }}>
+                    <NavLink
+                      className="nav-link active"
+                      aria-current="page"
+                      to="/Expenses"
+                      style={{ fontWeight: 'bold' }}
+                    >
+                      Dashboard
+                    </NavLink>
+                  </li>
+                </ul>
+                <form className="form-inline my-2 my-lg-0">
+                  <button className="btn btn-primary" onClick={handleLogout}>
+                    Logout
+                  </button>
+                </form>
+              </>
             )}
           </div>
         </div>

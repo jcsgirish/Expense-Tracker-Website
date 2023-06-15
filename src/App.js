@@ -6,12 +6,16 @@ import Login from './Components/Pages/Login';
 import ProfileDetails from './Components/Pages/ProfileDetails';
 import ForgetPasswordPage from './Components/Pages/ForgetPassword';
 import Expenses from './Components/Pages/Expenses';
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector, Provider } from 'react-redux';
+import store from './Store';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import 'bootstrap-icons/font/bootstrap-icons.css';
+
 
 
 
 function App() {
-  const dispatch = useDispatch();
+
   const token = useSelector(state => state.authentication.token);
   const isLoggedIn = useSelector(state => state.authentication.isLoggedIn);
   const expenses = useSelector(state => state.expense.expenses);
@@ -20,9 +24,9 @@ function App() {
 
 
   return (
-    <Fragment>
+    <Provider store={store}>
       <div
-        className={mode ? 'bg-secondary text-light' : ''}
+        className={mode ? 'bg-black text-light' : ''}
         style={{
           position: 'absolute',
           top: 0,
@@ -30,14 +34,15 @@ function App() {
           height: '110vh',
           width: '100vw',
           zIndex: -1,
-        }}
-      ></div>
+        }}>
+            </div>
+    
       <Navbar />
       <div>
         <Switch>
           <Route exact path='/'>
             <Login />
-          </Route>
+          </Route> 
           <Route exact path='/forget'>
             <ForgetPasswordPage />
           </Route>
@@ -51,8 +56,8 @@ function App() {
             {token ? <Expenses /> : <Redirect to='/' />}
           </Route>
         </Switch>
-      </div>
-    </Fragment>
+        </div>
+    </Provider>
   );
 }
 

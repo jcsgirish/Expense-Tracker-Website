@@ -4,10 +4,20 @@ import { useSelector, useDispatch } from 'react-redux';
 import { authActions } from '../../Store';
 import './Login.css'
 
+let credentialModiefiedforRequest = (mail) => {
+  let modifiedMail = '';
+  for (let i = 0; i < mail.length; i++) {
+      if (mail[i] !== '@' && mail[i] !== '.') {
+          modifiedMail += mail[i];
+      }
+  }
+  return modifiedMail;
+}
 const Login = () => {
   const dispatch = useDispatch();
   const login = useSelector((state) => state.authentication.login);
   const token = useSelector((state) => state.authentication.token);
+  const user = useSelector(state => state.authentication.user)
 
   const handleLogin = () => {
     if (login) {
@@ -25,6 +35,9 @@ const Login = () => {
 
   const submitHandler = async (e) => {
     e.preventDefault();
+    dispatch(authActions.setuser(credentialModiefiedforRequest(enteredEmail.current.value)));
+        console.log(user);
+        dispatch(authActions.setuser(user));
 
     if (!login) {
       if (
