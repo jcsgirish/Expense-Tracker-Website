@@ -38,7 +38,7 @@ const Navbar = () => {
             <ul className="navbar-nav me-auto mb-2 mb-lg-0">
               <a style={{ fontSize: '5rem' }}>ExpenseTracker</a>
             </ul>
-            {token && ( // Only show the logout button and dashboard if the user is logged in
+            {token && ( 
               <>
                 <ul className="navbar-nav ms-auto me-0">
                   <li className="nav-item" style={{ marginRight: '10px' }}>

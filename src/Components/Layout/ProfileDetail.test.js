@@ -4,7 +4,7 @@ import { BrowserRouter as Router } from 'react-router-dom';
 import store from '../../Store';
 import '@testing-library/jest-dom';
 import ProfileDetails from '../Pages/ProfileDetails';
-import App from '../../App';
+
 
 describe('Expense Component', () => {
   test('testing Welcome to expense tracker!!! word', () => {
