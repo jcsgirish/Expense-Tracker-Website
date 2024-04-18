@@ -38,11 +38,11 @@ const DummyScreen = () => {
   }
   return (
     <div className='my-2  mx-2 row'>
-      <h1 className="fst-italic col-md-8" >
+      <h1 className="fst-italic col-md-8"  >
         Welcome to expanse tracker!!!
       </h1>
-      <span className='fst-italic bg-warning col-md-4 my-2'>Your profie is incomplete<Link className='text-primary' to="/details">Complete now</Link></span>
-      <hr />
+      {/* <span className='fst-italic bg-warning col-md-4 my-2'>Your profie is incomplete<Link className='text-primary' to="/details">Complete now</Link></span>
+      <hr /> */}
       <div>
         <button className="btn btn-primary w-25" onClick={handleVerify}>Veify Your E-mail</button>
       </div>

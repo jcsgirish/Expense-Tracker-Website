@@ -72,9 +72,9 @@ const ProfileDetails = () => {
                 Welcome to expanse tracker!!!
                 {/*console.log(ctx.profileInfo)*/}
             </h1>
-            <span className='fst-italic bg-warning'>Your profile is 64% complete.A complete profile has higher chances of landing a job.<Link className='text-primary' to="/details">Complete now</Link></span>
+            {/* <span className='fst-italic bg-warning'><Link className='text-primary' to="/details">Complete now</Link></span> */}
             <hr />
-            <form className='w-75 float-end'>
+            {/* <form className='w-75 float-end'>
                 <div className='my-2'>
                     <span className='text-center h4'>Contact details</span>
                     <span><button type="button" className="btn btn-outline-danger float-end">Cancel</button></span>
@@ -99,7 +99,7 @@ const ProfileDetails = () => {
                 </div>
                 <button type="submit" className="btn btn-primary" onClick={handleUpdate}>Update</button>
                 <hr />
-            </form>
+            </form> */}
         </div>
     )
 }

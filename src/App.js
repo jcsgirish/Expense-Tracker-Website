@@ -12,16 +12,11 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap-icons/font/bootstrap-icons.css';
 
 
-
-
 function App() {
-
   const token = useSelector(state => state.authentication.token);
   const isLoggedIn = useSelector(state => state.authentication.isLoggedIn);
   const expenses = useSelector(state => state.expense.expenses);
   const mode = useSelector(state => state.theme.mode || false);
-
-
 
   return (
     <Provider store={store}>
@@ -35,7 +30,7 @@ function App() {
           width: '100vw',
           zIndex: -1,
         }}>
-            </div>
+        </div>
     
       <Navbar />
       <div>
@@ -49,7 +44,7 @@ function App() {
           <Route exact path='/profile'>
             {token ? <DummyScreen /> : <Redirect to='/' />}
           </Route>
-          <Route exact path='/details'>
+           <Route exact path='/details'>
             <ProfileDetails />
           </Route>
           <Route exact path='/expenses'>

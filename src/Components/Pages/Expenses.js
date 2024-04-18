@@ -207,7 +207,7 @@ const Expenses = () => {
   return (
     <div className="container">
       <div className="row gx-3 gy-2 align-items-center mx-5 my-5">
-  <h1>Enter your expense</h1>
+  <h1 >Enter your expense</h1>
   <form className="row gy-2 gx-3 align-items-center">
     <div className="col-auto">
       <label className="visually-hidden" htmlFor="expenseamount">
