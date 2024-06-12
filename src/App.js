@@ -1,6 +1,6 @@
-import { Fragment,useEffect } from 'react';
+
 import { Route, Switch, Redirect } from 'react-router-dom';
-import DummyScreen from './Components/Layout/DummyPage';
+// import DummyScreen from './Components/Layout/DummyPage';
 import Navbar from './Components/Layout/NavBar';
 import Login from './Components/Pages/Login';
 import ProfileDetails from './Components/Pages/ProfileDetails';
@@ -41,9 +41,9 @@ function App() {
           <Route exact path='/forget'>
             <ForgetPasswordPage />
           </Route>
-          <Route exact path='/profile'>
+          {/* <Route exact path='/profile'>
             {token ? <DummyScreen /> : <Redirect to='/' />}
-          </Route>
+          </Route> */}
            <Route exact path='/details'>
             <ProfileDetails />
           </Route>

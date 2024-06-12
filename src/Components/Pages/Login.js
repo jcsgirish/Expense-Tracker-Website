@@ -37,7 +37,7 @@ const Login = () => {
   const submitHandler = async (e) => {
     e.preventDefault();
     dispatch(authActions.setuser(credentialModifiedForRequest(enteredEmail.current.value)));
-    console.log(user);
+    // console.log(user);
     dispatch(authActions.setuser(user));
 
     if (!login) {
@@ -65,11 +65,11 @@ const Login = () => {
 
             if (response.ok) {
               const data = await response.json();
-              console.log('Authentication Token:', token);
+              // console.log('Authentication Token:', token);
               dispatch(authActions.setToken(data.idToken));
               localStorage.setItem('token', data.idToken);
               alert('User has signed up');
-              console.log('User has signed up');
+              // console.log('User has signed up');
               // Redirect to the profile page
               history.push('/profile');
             } else {
@@ -105,7 +105,7 @@ const Login = () => {
 
           if (response.ok) {
             const data = await response.json();
-            console.log('Authentication Token:', data.idToken);
+            // console.log('Authentication Token:', data.idToken);
             dispatch(authActions.setToken(data.idToken));
             alert('Logged in successfully');
             console.log('Logged in successfully');
@@ -125,7 +125,7 @@ const Login = () => {
 
               if (response.ok) {
                 const data = await response.json();
-                console.log(data.users[0]);
+                // console.log(data.users[0]);
                 dispatch(authActions.setProfileInfo({ myName: data.users[0].displayName, myUrl: data.users[0].photoUrl }));
                 alert('Request successful');
               } else {
